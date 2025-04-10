@@ -3,37 +3,89 @@
 
 openapi: 3.0.3
 info:
-    title: Greeter API
-    description: The greeting service definition.
+    title: Filmclip API
     version: 0.0.1
 paths:
-    /helloworld/{name}:
-        get:
+    /asset/image/upload:
+        post:
             tags:
-                - Greeter
-                - subgroup
-            description: Sends a greeting
-            operationId: Greeter_SayHello
-            parameters:
-                - name: name
-                  in: path
-                  required: true
-                  schema:
-                    type: string
+                - Filmclip
+            operationId: Filmclip_UploadImage
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/filmclip.v1.UploadImageRequest'
+                required: true
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/helloworld.v1.HelloReply'
+                                $ref: '#/components/schemas/filmclip.v1.UploadImageReply'
+    /clip/script/generate:
+        post:
+            tags:
+                - Filmclip
+            operationId: Filmclip_GenClipScript
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/filmclip.v1.GenClipScriptRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/filmclip.v1.GenClipScriptReply'
 components:
     schemas:
-        helloworld.v1.HelloReply:
+        filmclip.v1.GenClipScriptReply:
             type: object
             properties:
-                message:
+                title:
                     type: string
-            description: The response message containing the greetings
+                content:
+                    type: string
+                scenes:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/filmclip.v1.SceneScript'
+        filmclip.v1.GenClipScriptRequest:
+            type: object
+            properties:
+                clothingImage:
+                    type: string
+                sceneImage:
+                    type: string
+                prompt:
+                    type: string
+        filmclip.v1.SceneScript:
+            type: object
+            properties:
+                description:
+                    type: string
+                dialogue:
+                    type: string
+                actions:
+                    type: string
+                shotType:
+                    type: string
+        filmclip.v1.UploadImageReply:
+            type: object
+            properties:
+                url:
+                    type: string
+        filmclip.v1.UploadImageRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+                base64:
+                    type: string
 tags:
-    - name: Greeter
+    - name: Filmclip

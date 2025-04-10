@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package filmclip.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "ai-mkt-be/api/filmclip/v1;v1";
+option java_multiple_files = true;
+option java_package = "dev.kratos.api.filmclip.v1";
+option java_outer_classname = "FilmclipProtoV1";
+
+service Filmclip {
+
+  rpc UploadImage (UploadImageRequest) returns (UploadImageReply) {
+    option (google.api.http) = {
+      post: "/asset/image/upload",
+      body: "*",
+    };
+  }
+
+  rpc GenClipScript (GenClipScriptRequest) returns (GenClipScriptReply) {
+    option (google.api.http) = {
+      post: "/clip/script/generate",
+      body: "*",
+    };
+  }
+
+}
+
+message UploadImageRequest {
+  string name = 1;
+  string base64 = 2;
+}
+
+message UploadImageReply {
+  string url = 1;
+}
+
+message GenClipScriptRequest {
+  string clothing_image = 1;
+  string scene_image = 2;
+  string prompt = 3;
+}
+
+message GenClipScriptReply {
+  string title = 1;
+  string content = 2;
+  repeated SceneScript scenes = 3;
+}
+
+message SceneScript {
+  string description = 1;
+  string dialogue = 2;
+  string actions = 3;
+  string shotType = 4;
+}
