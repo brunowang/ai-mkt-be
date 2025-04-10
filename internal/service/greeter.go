@@ -7,23 +7,26 @@ import (
 	"ai-mkt-be/internal/biz"
 )
 
-// GreeterService is a greeter service.
-type GreeterService struct {
-	v1.UnimplementedGreeterServer
+// FilmclipService is a filmclip service.
+type FilmclipService struct {
+	v1.UnimplementedFilmclipServer
 
 	uc *biz.GreeterUsecase
 }
 
-// NewGreeterService new a greeter service.
-func NewGreeterService(uc *biz.GreeterUsecase) *GreeterService {
-	return &GreeterService{uc: uc}
+// NewFilmclipService new a filmclip service.
+func NewFilmclipService(uc *biz.GreeterUsecase) *FilmclipService {
+	return &FilmclipService{uc: uc}
 }
 
-// SayHello implements helloworld.GreeterServer.
-func (s *GreeterService) SayHello(ctx context.Context, in *v1.HelloRequest) (*v1.HelloReply, error) {
+func (s *FilmclipService) UploadImage(ctx context.Context, in *v1.UploadImageRequest) (*v1.UploadImageReply, error) {
 	g, err := s.uc.CreateGreeter(ctx, &biz.Greeter{Hello: in.Name})
 	if err != nil {
 		return nil, err
 	}
-	return &v1.HelloReply{Message: "Hello " + g.Hello}, nil
+	return &v1.UploadImageReply{Url: "Hello " + g.Hello}, nil
+}
+
+func (s *FilmclipService) GenClipScript(context.Context, *v1.GenClipScriptRequest) (*v1.GenClipScriptReply, error) {
+	return &v1.GenClipScriptReply{}, nil
 }
