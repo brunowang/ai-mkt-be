@@ -9,5 +9,6 @@ option objc_class_prefix = "APIHelloworldV1";
 
 enum ErrorReason {
   GREETER_UNSPECIFIED = 0;
-  USER_NOT_FOUND = 1;
+  AGENT_NOT_FOUND = 1;
+  EMPTY_OUTPUT = 2;
 }

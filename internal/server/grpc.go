@@ -1,7 +1,7 @@
 package server
 
 import (
-	v1 "ai-mkt-be/api/helloworld/v1"
+	v1 "ai-mkt-be/api/filmclip/v1"
 	"ai-mkt-be/internal/conf"
 	"ai-mkt-be/internal/service"
 

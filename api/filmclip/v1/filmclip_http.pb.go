@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-http v2.8.0
 // - protoc             v5.29.3
-// source: helloworld/v1/filmclip.proto
+// source: filmclip/v1/filmclip.proto
 
 package v1
 
