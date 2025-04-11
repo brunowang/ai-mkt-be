@@ -1,16 +1,9 @@
 package biz
 
 import (
-	v1 "ai-mkt-be/api/filmclip/v1"
 	"context"
 
-	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
-)
-
-var (
-	// ErrAgentNotFound is agent not found.
-	ErrAgentNotFound = errors.NotFound(v1.ErrorReason_AGENT_NOT_FOUND.String(), "agent not found")
 )
 
 // Greeter is a Greeter model.

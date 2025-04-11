@@ -54,3 +54,12 @@ message SceneScript {
   string actions = 3;
   string shotType = 4;
 }
+
+enum Intent {
+  // 默认直接调用LLM
+  Default = 0;
+  // 自动识别意图
+  AutoClassify = 1;
+  // 生成分镜脚本
+  GenClipScript = 2;
+}

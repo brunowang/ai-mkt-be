@@ -11,7 +11,7 @@ import (
 )
 
 type Invoker interface {
-	ChatCompletion(messages ...Message) (*Message, error)
+	ChatCompletion(messages ...ReqMessage) (*RspMessage, error)
 	Temperature(t float64) Invoker
 }
 
@@ -94,7 +94,7 @@ func (i *OpenAIInvoker) WithTools(tools ...ToolDef) Invoker {
 	return i
 }
 
-func (i *OpenAIInvoker) ChatCompletion(messages ...Message) (*Message, error) {
+func (i *OpenAIInvoker) ChatCompletion(messages ...ReqMessage) (*RspMessage, error) {
 	body := &OpenAIReq{
 		Model:       i.modelName,
 		Messages:    messages,

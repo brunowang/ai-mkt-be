@@ -2,6 +2,7 @@ package service
 
 import (
 	v1 "ai-mkt-be/api/filmclip/v1"
+	"ai-mkt-be/internal/agents/llm"
 	"context"
 	"encoding/base64"
 	"fmt"
@@ -19,14 +20,15 @@ import (
 // FilmclipService is a filmclip service.
 type FilmclipService struct {
 	v1.UnimplementedFilmclipServer
-	logger *log.Helper
+	lg *log.Helper
 
-	uc *biz.GreeterUsecase
+	agentGraph *biz.AgentGraph
+	uc         *biz.GreeterUsecase
 }
 
 // NewFilmclipService new a filmclip service.
-func NewFilmclipService(logger log.Logger, uc *biz.GreeterUsecase) *FilmclipService {
-	return &FilmclipService{logger: log.NewHelper(logger), uc: uc}
+func NewFilmclipService(logger log.Logger, agentGraph *biz.AgentGraph, uc *biz.GreeterUsecase) *FilmclipService {
+	return &FilmclipService{lg: log.NewHelper(logger), agentGraph: agentGraph, uc: uc}
 }
 
 func (s *FilmclipService) UploadImage(ctx context.Context, in *v1.UploadImageRequest) (*v1.UploadImageReply, error) {
@@ -77,11 +79,29 @@ func (s *FilmclipService) UploadImage(ctx context.Context, in *v1.UploadImageReq
 	url := fmt.Sprintf("file://%s", absPath)
 
 	// 记录日志
-	s.logger.WithContext(ctx).Infof("Image uploaded: %s, saved to: %s", in.Name, filePath)
+	s.lg.WithContext(ctx).Infof("Image uploaded: %s, saved to: %s", in.Name, filePath)
 
 	return &v1.UploadImageReply{Url: url}, nil
 }
 
-func (s *FilmclipService) GenClipScript(context.Context, *v1.GenClipScriptRequest) (*v1.GenClipScriptReply, error) {
-	return &v1.GenClipScriptReply{}, nil
+func (s *FilmclipService) GenClipScript(ctx context.Context, req *v1.GenClipScriptRequest) (*v1.GenClipScriptReply, error) {
+	ag, err := s.agentGraph.GetAgent(v1.Intent_GenClipScript)
+	if err != nil {
+		return nil, err
+	}
+	msgs := []llm.ReqMessage{
+		{
+			Role: llm.RoleUser,
+			Content: llm.MultiContent{
+				llm.NewTextContent(req.Prompt),
+				llm.NewImageContent(req.ClothingImage),
+				llm.NewImageContent(req.SceneImage),
+			},
+		},
+	}
+	ans, err := ag.Execute(ctx, msgs...)
+	if err != nil {
+		return nil, err
+	}
+	return &v1.GenClipScriptReply{Content: ans.Content}, nil
 }
