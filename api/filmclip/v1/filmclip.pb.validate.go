@@ -551,8 +551,6 @@ func (m *SceneScript) validate(all bool) error {
 
 	// no validation rules for Description
 
-	// no validation rules for Dialogue
-
 	// no validation rules for Actions
 
 	// no validation rules for ShotType

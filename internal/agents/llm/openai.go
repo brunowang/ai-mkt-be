@@ -2,6 +2,8 @@ package llm
 
 import (
 	"encoding/json"
+	"github.com/go-kratos/kratos/v2/errors"
+	"regexp"
 	"strings"
 )
 
@@ -171,4 +173,18 @@ func (h History) LastQ() string {
 		}
 	}
 	return ""
+}
+
+// ExtractJSONFromText 使用正则表达式从文本中提取JSON部分
+func ExtractJSONFromText(text string) (string, error) {
+	// 匹配```json\n和\n```之间的内容
+	re := regexp.MustCompile("```json\\s*\\n([\\s\\S]*?)\\n\\s*```")
+	matches := re.FindStringSubmatch(text)
+
+	if len(matches) < 2 {
+		return "", errors.New(500, "JSON_DECODE_ERROR", "json part not found")
+	}
+
+	// 返回第一个捕获组的内容（即JSON部分）
+	return matches[1], nil
 }

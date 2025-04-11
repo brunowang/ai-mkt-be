@@ -5,6 +5,7 @@ import (
 	"ai-mkt-be/internal/agents/llm"
 	"context"
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"github.com/go-kratos/kratos/v2/log"
 	"net/http"
@@ -103,5 +104,21 @@ func (s *FilmclipService) GenClipScript(ctx context.Context, req *v1.GenClipScri
 	if err != nil {
 		return nil, err
 	}
-	return &v1.GenClipScriptReply{Content: ans.Content}, nil
+	js, err := llm.ExtractJSONFromText(ans.Content)
+	if err != nil {
+		return nil, err
+	}
+	arr := make([]map[string]any, 0)
+	if err := json.Unmarshal([]byte(js), &arr); err != nil {
+		return nil, err
+	}
+	scenes := make([]*v1.SceneScript, 0, len(arr))
+	for _, ele := range arr {
+		var scene v1.SceneScript
+		scene.Description, _ = ele["场景描述"].(string)
+		scene.Actions, _ = ele["拍摄动作"].(string)
+		scene.ShotType, _ = ele["镜头类型"].(string)
+		scenes = append(scenes, &scene)
+	}
+	return &v1.GenClipScriptReply{Scenes: scenes}, nil
 }

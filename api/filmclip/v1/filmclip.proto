@@ -51,9 +51,8 @@ message GenClipScriptReply {
 
 message SceneScript {
   string description = 1;
-  string dialogue = 2;
-  string actions = 3;
-  string shotType = 4;
+  string actions = 2;
+  string shotType = 3;
 }
 
 enum Intent {
