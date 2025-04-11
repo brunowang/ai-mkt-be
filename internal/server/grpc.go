@@ -4,6 +4,10 @@ import (
 	v1 "ai-mkt-be/api/filmclip/v1"
 	"ai-mkt-be/internal/conf"
 	"ai-mkt-be/internal/service"
+	"github.com/go-kratos/kratos/v2/middleware/logging"
+	"github.com/go-kratos/kratos/v2/middleware/tracing"
+	"github.com/go-kratos/kratos/v2/middleware/validate"
+	tracesdk "go.opentelemetry.io/otel/sdk/trace"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
@@ -15,6 +19,12 @@ func NewGRPCServer(c *conf.Server, greeter *service.FilmclipService, logger log.
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
 			recovery.Recovery(),
+			tracing.Server(
+				tracing.WithTracerName("filmclip-grpc"),
+				tracing.WithTracerProvider(tracesdk.NewTracerProvider()),
+			),
+			logging.Server(logger),
+			validate.Validator(),
 		),
 	}
 	if c.Grpc.Network != "" {

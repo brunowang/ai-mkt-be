@@ -3,6 +3,7 @@ syntax = "proto3";
 package filmclip.v1;
 
 import "google/api/annotations.proto";
+import "validate/validate.proto";
 
 option go_package = "ai-mkt-be/api/filmclip/v1;v1";
 option java_multiple_files = true;
@@ -28,8 +29,8 @@ service Filmclip {
 }
 
 message UploadImageRequest {
-  string name = 1;
-  string base64 = 2;
+  string name = 1 [(validate.rules).string.min_len = 1];
+  string base64 = 2 [(validate.rules).string.min_len = 1];
 }
 
 message UploadImageReply {
@@ -37,8 +38,8 @@ message UploadImageReply {
 }
 
 message GenClipScriptRequest {
-  string clothing_image = 1;
-  string scene_image = 2;
+  string clothing_image = 1 [(validate.rules).string.min_len = 1];
+  string model_image = 2 [(validate.rules).string.min_len = 1];
   string prompt = 3;
 }
 

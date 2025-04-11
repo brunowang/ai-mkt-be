@@ -60,7 +60,7 @@ components:
             properties:
                 clothingImage:
                     type: string
-                sceneImage:
+                modelImage:
                     type: string
                 prompt:
                     type: string

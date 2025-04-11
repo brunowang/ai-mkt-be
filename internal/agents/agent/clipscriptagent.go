@@ -16,7 +16,7 @@ type ClipScriptAgent struct {
 func NewClipScriptAgent(logger log.Logger) *ClipScriptAgent {
 	w := &ClipScriptAgent{
 		lg:      log.NewHelper(logger),
-		invoker: llm.NewGpt4Invoker(),
+		invoker: llm.NewGpt4Invoker(logger),
 	}
 	return w.PreparePrompt()
 }
@@ -32,7 +32,7 @@ func (a *ClipScriptAgent) PreparePrompt() *ClipScriptAgent {
 - Skills: 精通分镜脚本的撰写，擅长运用各种镜头类型（如特写、全景、中景等）来突出主题，掌握拍摄动作的指导技巧，能够根据服装和模特的特点设计出符合主题的场景和情节。
 - Goals: 根据用户提供的服装和模特图片，生成一组详细的分镜拍摄脚本，包括场景描述、拍摄动作和镜头类型，确保脚本具有可操作性和创意性，能够满足短视频的拍摄需求。
 - Constrains: 脚本应基于用户提供的图片内容，避免添加与图片无关的元素，确保脚本的实用性和针对性。同时，脚本应简洁明了，易于理解和执行。
-- OutputFormat: 分镜脚本应包含镜头编号、场景描述、拍摄动作、镜头类型等要素，以表格或列表的形式呈现。
+- OutputFormat: 分镜脚本应包含镜头编号、场景描述、拍摄动作、镜头类型等要素，以json格式返回，要求返回的内容直接可以进行json解析。
 - Workflow:
   1. 分析用户提供的服装和模特图片，提取关键元素和风格特点。
   2. 根据提取的元素和特点，构思短视频的主题和情节，设计场景布局。
@@ -52,6 +52,7 @@ func (a *ClipScriptAgent) Execute(ctx context.Context, msgs ...llm.ReqMessage) (
 			Content: llm.NewSimpleContent(a.userPrompt),
 		},
 	}
+	messages = append(messages, msgs...)
 	ans, err := a.invoker.ChatCompletion(messages...)
 	return ans, err
 }

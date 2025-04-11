@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/go-kratos/kratos/v2/errors"
+	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-resty/resty/v2"
 	"net/http"
 	"os"
@@ -19,9 +20,9 @@ type Gpt4Invoker struct {
 	Invoker
 }
 
-func NewGpt4Invoker(tools ...ToolDef) *Gpt4Invoker {
+func NewGpt4Invoker(logger log.Logger, tools ...ToolDef) *Gpt4Invoker {
 	return &Gpt4Invoker{
-		Invoker: NewOpenAIInvoker().
+		Invoker: NewOpenAIInvoker(logger).
 			ApiKey(os.Getenv("OPENAI_API_KEY")).
 			ApiBase("https://openrouter.ai/api/v1").
 			ModelName("openai/gpt-4o").
@@ -33,9 +34,9 @@ type Claude3Invoker struct {
 	Invoker
 }
 
-func NewClaude3Invoker() *Claude3Invoker {
+func NewClaude3Invoker(logger log.Logger) *Claude3Invoker {
 	return &Claude3Invoker{
-		Invoker: NewOpenAIInvoker().
+		Invoker: NewOpenAIInvoker(logger).
 			ApiKey(os.Getenv("OPENAI_API_KEY")).
 			ApiBase("https://openrouter.ai/api/v1").
 			ModelName("anthropic/claude-3-5-sonnet"),
@@ -43,6 +44,7 @@ func NewClaude3Invoker() *Claude3Invoker {
 }
 
 type OpenAIInvoker struct {
+	lg      *log.Helper
 	cli     *resty.Client
 	apiKey  string
 	apiBase string
@@ -52,8 +54,9 @@ type OpenAIInvoker struct {
 	tools       []ToolDef
 }
 
-func NewOpenAIInvoker() *OpenAIInvoker {
+func NewOpenAIInvoker(logger log.Logger) *OpenAIInvoker {
 	return &OpenAIInvoker{
+		lg:          log.NewHelper(logger),
 		cli:         resty.New(),
 		temperature: 0.01,
 	}
@@ -117,6 +120,7 @@ func (i *OpenAIInvoker) ChatCompletion(messages ...ReqMessage) (*RspMessage, err
 		return nil, fmt.Errorf("unmarshal error: %w, body: %s", err, string(rsp.Body()))
 	}
 	if len(openAIRsp.Choices) == 0 {
+		i.lg.Errorf("unexpected openai response %s, request: %+v", string(rsp.Body()), body)
 		return nil, errors.InternalServer(v1.ErrorReason_EMPTY_OUTPUT.String(), "got empty output from llm")
 	}
 	return &openAIRsp.Choices[0].Message, nil

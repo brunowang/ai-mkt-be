@@ -93,9 +93,9 @@ func (s *FilmclipService) GenClipScript(ctx context.Context, req *v1.GenClipScri
 		{
 			Role: llm.RoleUser,
 			Content: llm.MultiContent{
-				llm.NewTextContent(req.Prompt),
+				llm.NewTextContent("参考这两张图片，第一张是服装图，第二张是模特图。\n" + req.Prompt),
 				llm.NewImageContent(req.ClothingImage),
-				llm.NewImageContent(req.SceneImage),
+				llm.NewImageContent(req.ModelImage),
 			},
 		},
 	}
