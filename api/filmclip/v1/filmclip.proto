@@ -12,6 +12,13 @@ option java_outer_classname = "FilmclipProtoV1";
 
 service Filmclip {
 
+  rpc CreatePlan (CreatePlanRequest) returns (CreatePlanReply) {
+    option (google.api.http) = {
+      post: "/project/plan/create",
+      body: "*",
+    };
+  }
+
   rpc UploadImage (UploadImageRequest) returns (UploadImageReply) {
     option (google.api.http) = {
       post: "/asset/image/upload",
@@ -28,9 +35,24 @@ service Filmclip {
 
 }
 
-message UploadImageRequest {
+message CreatePlanRequest {
   string name = 1 [(validate.rules).string.min_len = 1];
-  string base64 = 2 [(validate.rules).string.min_len = 1];
+}
+
+message CreatePlanReply {
+  string plan_id = 1;
+}
+
+message UploadImageRequest {
+  enum ImageType {
+    Unknown = 0;
+    Cloth = 1;
+    Human = 2;
+  }
+  ImageType type = 1 [(validate.rules).enum.defined_only = true];
+  string plan_id = 2 [(validate.rules).string.min_len = 1];
+  string name = 3 [(validate.rules).string.min_len = 1];
+  string base64 = 4 [(validate.rules).string.min_len = 1];
 }
 
 message UploadImageReply {
@@ -38,9 +60,10 @@ message UploadImageReply {
 }
 
 message GenClipScriptRequest {
-  string clothing_image = 1 [(validate.rules).string.min_len = 1];
-  string model_image = 2 [(validate.rules).string.min_len = 1];
-  string prompt = 3;
+  string plan_id = 1 [(validate.rules).string.min_len = 1];
+  string cloth_image = 2 [(validate.rules).string.min_len = 1];
+  string human_image = 3 [(validate.rules).string.min_len = 1];
+  string prompt = 4;
 }
 
 message GenClipScriptReply {

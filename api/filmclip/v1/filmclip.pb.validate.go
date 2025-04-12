@@ -35,6 +35,221 @@ var (
 	_ = sort.Sort
 )
 
+// Validate checks the field values on CreatePlanRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *CreatePlanRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on CreatePlanRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// CreatePlanRequestMultiError, or nil if none found.
+func (m *CreatePlanRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *CreatePlanRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetName()) < 1 {
+		err := CreatePlanRequestValidationError{
+			field:  "Name",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return CreatePlanRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// CreatePlanRequestMultiError is an error wrapping multiple validation errors
+// returned by CreatePlanRequest.ValidateAll() if the designated constraints
+// aren't met.
+type CreatePlanRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m CreatePlanRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m CreatePlanRequestMultiError) AllErrors() []error { return m }
+
+// CreatePlanRequestValidationError is the validation error returned by
+// CreatePlanRequest.Validate if the designated constraints aren't met.
+type CreatePlanRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e CreatePlanRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e CreatePlanRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e CreatePlanRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e CreatePlanRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e CreatePlanRequestValidationError) ErrorName() string {
+	return "CreatePlanRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e CreatePlanRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCreatePlanRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = CreatePlanRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = CreatePlanRequestValidationError{}
+
+// Validate checks the field values on CreatePlanReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *CreatePlanReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on CreatePlanReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// CreatePlanReplyMultiError, or nil if none found.
+func (m *CreatePlanReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *CreatePlanReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for PlanId
+
+	if len(errors) > 0 {
+		return CreatePlanReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// CreatePlanReplyMultiError is an error wrapping multiple validation errors
+// returned by CreatePlanReply.ValidateAll() if the designated constraints
+// aren't met.
+type CreatePlanReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m CreatePlanReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m CreatePlanReplyMultiError) AllErrors() []error { return m }
+
+// CreatePlanReplyValidationError is the validation error returned by
+// CreatePlanReply.Validate if the designated constraints aren't met.
+type CreatePlanReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e CreatePlanReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e CreatePlanReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e CreatePlanReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e CreatePlanReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e CreatePlanReplyValidationError) ErrorName() string { return "CreatePlanReplyValidationError" }
+
+// Error satisfies the builtin error interface
+func (e CreatePlanReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCreatePlanReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = CreatePlanReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = CreatePlanReplyValidationError{}
+
 // Validate checks the field values on UploadImageRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -56,6 +271,28 @@ func (m *UploadImageRequest) validate(all bool) error {
 	}
 
 	var errors []error
+
+	if _, ok := UploadImageRequest_ImageType_name[int32(m.GetType())]; !ok {
+		err := UploadImageRequestValidationError{
+			field:  "Type",
+			reason: "value must be one of the defined enum values",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if utf8.RuneCountInString(m.GetPlanId()) < 1 {
+		err := UploadImageRequestValidationError{
+			field:  "PlanId",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if utf8.RuneCountInString(m.GetName()) < 1 {
 		err := UploadImageRequestValidationError{
@@ -283,9 +520,9 @@ func (m *GenClipScriptRequest) validate(all bool) error {
 
 	var errors []error
 
-	if utf8.RuneCountInString(m.GetClothingImage()) < 1 {
+	if utf8.RuneCountInString(m.GetPlanId()) < 1 {
 		err := GenClipScriptRequestValidationError{
-			field:  "ClothingImage",
+			field:  "PlanId",
 			reason: "value length must be at least 1 runes",
 		}
 		if !all {
@@ -294,9 +531,20 @@ func (m *GenClipScriptRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if utf8.RuneCountInString(m.GetModelImage()) < 1 {
+	if utf8.RuneCountInString(m.GetClothImage()) < 1 {
 		err := GenClipScriptRequestValidationError{
-			field:  "ModelImage",
+			field:  "ClothImage",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if utf8.RuneCountInString(m.GetHumanImage()) < 1 {
+		err := GenClipScriptRequestValidationError{
+			field:  "HumanImage",
 			reason: "value length must be at least 1 runes",
 		}
 		if !all {

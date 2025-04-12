@@ -29,9 +29,9 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 	if err != nil {
 		return nil, nil, err
 	}
-	greeterRepo := data.NewGreeterRepo(dataData, logger)
-	greeterUsecase := biz.NewGreeterUsecase(greeterRepo, logger)
-	filmclipService := service.NewFilmclipService(logger, agentGraph, greeterUsecase)
+	planRepo := data.NewPlanRepo(dataData, logger)
+	planUsecase := biz.NewPlanUsecase(planRepo, logger)
+	filmclipService := service.NewFilmclipService(logger, agentGraph, planUsecase)
 	grpcServer := server.NewGRPCServer(confServer, filmclipService, logger)
 	httpServer := server.NewHTTPServer(confServer, filmclipService, logger)
 	app := newApp(logger, grpcServer, httpServer)

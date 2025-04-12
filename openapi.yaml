@@ -42,8 +42,36 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/filmclip.v1.GenClipScriptReply'
+    /project/plan/create:
+        post:
+            tags:
+                - Filmclip
+            operationId: Filmclip_CreatePlan
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/filmclip.v1.CreatePlanRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/filmclip.v1.CreatePlanReply'
 components:
     schemas:
+        filmclip.v1.CreatePlanReply:
+            type: object
+            properties:
+                planId:
+                    type: string
+        filmclip.v1.CreatePlanRequest:
+            type: object
+            properties:
+                name:
+                    type: string
         filmclip.v1.GenClipScriptReply:
             type: object
             properties:
@@ -58,9 +86,11 @@ components:
         filmclip.v1.GenClipScriptRequest:
             type: object
             properties:
-                clothingImage:
+                planId:
                     type: string
-                modelImage:
+                clothImage:
+                    type: string
+                humanImage:
                     type: string
                 prompt:
                     type: string
@@ -81,6 +111,11 @@ components:
         filmclip.v1.UploadImageRequest:
             type: object
             properties:
+                type:
+                    type: integer
+                    format: enum
+                planId:
+                    type: string
                 name:
                     type: string
                 base64:

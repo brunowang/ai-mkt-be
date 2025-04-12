@@ -19,6 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	Filmclip_CreatePlan_FullMethodName    = "/filmclip.v1.Filmclip/CreatePlan"
 	Filmclip_UploadImage_FullMethodName   = "/filmclip.v1.Filmclip/UploadImage"
 	Filmclip_GenClipScript_FullMethodName = "/filmclip.v1.Filmclip/GenClipScript"
 )
@@ -27,6 +28,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FilmclipClient interface {
+	CreatePlan(ctx context.Context, in *CreatePlanRequest, opts ...grpc.CallOption) (*CreatePlanReply, error)
 	UploadImage(ctx context.Context, in *UploadImageRequest, opts ...grpc.CallOption) (*UploadImageReply, error)
 	GenClipScript(ctx context.Context, in *GenClipScriptRequest, opts ...grpc.CallOption) (*GenClipScriptReply, error)
 }
@@ -37,6 +39,16 @@ type filmclipClient struct {
 
 func NewFilmclipClient(cc grpc.ClientConnInterface) FilmclipClient {
 	return &filmclipClient{cc}
+}
+
+func (c *filmclipClient) CreatePlan(ctx context.Context, in *CreatePlanRequest, opts ...grpc.CallOption) (*CreatePlanReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreatePlanReply)
+	err := c.cc.Invoke(ctx, Filmclip_CreatePlan_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *filmclipClient) UploadImage(ctx context.Context, in *UploadImageRequest, opts ...grpc.CallOption) (*UploadImageReply, error) {
@@ -63,6 +75,7 @@ func (c *filmclipClient) GenClipScript(ctx context.Context, in *GenClipScriptReq
 // All implementations must embed UnimplementedFilmclipServer
 // for forward compatibility.
 type FilmclipServer interface {
+	CreatePlan(context.Context, *CreatePlanRequest) (*CreatePlanReply, error)
 	UploadImage(context.Context, *UploadImageRequest) (*UploadImageReply, error)
 	GenClipScript(context.Context, *GenClipScriptRequest) (*GenClipScriptReply, error)
 	mustEmbedUnimplementedFilmclipServer()
@@ -75,6 +88,9 @@ type FilmclipServer interface {
 // pointer dereference when methods are called.
 type UnimplementedFilmclipServer struct{}
 
+func (UnimplementedFilmclipServer) CreatePlan(context.Context, *CreatePlanRequest) (*CreatePlanReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreatePlan not implemented")
+}
 func (UnimplementedFilmclipServer) UploadImage(context.Context, *UploadImageRequest) (*UploadImageReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UploadImage not implemented")
 }
@@ -100,6 +116,24 @@ func RegisterFilmclipServer(s grpc.ServiceRegistrar, srv FilmclipServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&Filmclip_ServiceDesc, srv)
+}
+
+func _Filmclip_CreatePlan_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreatePlanRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FilmclipServer).CreatePlan(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Filmclip_CreatePlan_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FilmclipServer).CreatePlan(ctx, req.(*CreatePlanRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Filmclip_UploadImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -145,6 +179,10 @@ var Filmclip_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "filmclip.v1.Filmclip",
 	HandlerType: (*FilmclipServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreatePlan",
+			Handler:    _Filmclip_CreatePlan_Handler,
+		},
 		{
 			MethodName: "UploadImage",
 			Handler:    _Filmclip_UploadImage_Handler,
