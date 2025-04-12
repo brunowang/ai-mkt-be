@@ -24,6 +24,24 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/filmclip.v1.UploadImageReply'
+    /clip/frame/generate:
+        post:
+            tags:
+                - Filmclip
+            operationId: Filmclip_GenClipFirstFrame
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/filmclip.v1.GenClipFrameRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/filmclip.v1.GenClipFrameReply'
     /clip/script/generate:
         post:
             tags:
@@ -42,6 +60,24 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/filmclip.v1.GenClipScriptReply'
+    /clip/video/generate:
+        post:
+            tags:
+                - Filmclip
+            operationId: Filmclip_GenClipVideo
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/filmclip.v1.GenClipVideoRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/filmclip.v1.GenClipVideoReply'
     /project/plan/create:
         post:
             tags:
@@ -72,6 +108,22 @@ components:
             properties:
                 name:
                     type: string
+        filmclip.v1.GenClipFrameReply:
+            type: object
+            properties:
+                imageUrl:
+                    type: array
+                    items:
+                        type: string
+        filmclip.v1.GenClipFrameRequest:
+            type: object
+            properties:
+                planId:
+                    type: string
+                scenes:
+                    type: array
+                    items:
+                        type: string
         filmclip.v1.GenClipScriptReply:
             type: object
             properties:
@@ -94,6 +146,22 @@ components:
                     type: string
                 prompt:
                     type: string
+        filmclip.v1.GenClipVideoReply:
+            type: object
+            properties:
+                videoUrl:
+                    type: array
+                    items:
+                        type: string
+        filmclip.v1.GenClipVideoRequest:
+            type: object
+            properties:
+                planId:
+                    type: string
+                scenes:
+                    type: array
+                    items:
+                        type: string
         filmclip.v1.SceneScript:
             type: object
             properties:

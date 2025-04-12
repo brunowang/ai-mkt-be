@@ -879,3 +879,455 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = SceneScriptValidationError{}
+
+// Validate checks the field values on GenClipFrameRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GenClipFrameRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GenClipFrameRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GenClipFrameRequestMultiError, or nil if none found.
+func (m *GenClipFrameRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GenClipFrameRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetPlanId()) < 1 {
+		err := GenClipFrameRequestValidationError{
+			field:  "PlanId",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(m.GetScenes()) < 1 {
+		err := GenClipFrameRequestValidationError{
+			field:  "Scenes",
+			reason: "value must contain at least 1 item(s)",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return GenClipFrameRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GenClipFrameRequestMultiError is an error wrapping multiple validation
+// errors returned by GenClipFrameRequest.ValidateAll() if the designated
+// constraints aren't met.
+type GenClipFrameRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GenClipFrameRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GenClipFrameRequestMultiError) AllErrors() []error { return m }
+
+// GenClipFrameRequestValidationError is the validation error returned by
+// GenClipFrameRequest.Validate if the designated constraints aren't met.
+type GenClipFrameRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GenClipFrameRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GenClipFrameRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GenClipFrameRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GenClipFrameRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GenClipFrameRequestValidationError) ErrorName() string {
+	return "GenClipFrameRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GenClipFrameRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGenClipFrameRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GenClipFrameRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GenClipFrameRequestValidationError{}
+
+// Validate checks the field values on GenClipFrameReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *GenClipFrameReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GenClipFrameReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GenClipFrameReplyMultiError, or nil if none found.
+func (m *GenClipFrameReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GenClipFrameReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return GenClipFrameReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// GenClipFrameReplyMultiError is an error wrapping multiple validation errors
+// returned by GenClipFrameReply.ValidateAll() if the designated constraints
+// aren't met.
+type GenClipFrameReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GenClipFrameReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GenClipFrameReplyMultiError) AllErrors() []error { return m }
+
+// GenClipFrameReplyValidationError is the validation error returned by
+// GenClipFrameReply.Validate if the designated constraints aren't met.
+type GenClipFrameReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GenClipFrameReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GenClipFrameReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GenClipFrameReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GenClipFrameReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GenClipFrameReplyValidationError) ErrorName() string {
+	return "GenClipFrameReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GenClipFrameReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGenClipFrameReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GenClipFrameReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GenClipFrameReplyValidationError{}
+
+// Validate checks the field values on GenClipVideoRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GenClipVideoRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GenClipVideoRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GenClipVideoRequestMultiError, or nil if none found.
+func (m *GenClipVideoRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GenClipVideoRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetPlanId()) < 1 {
+		err := GenClipVideoRequestValidationError{
+			field:  "PlanId",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(m.GetScenes()) < 1 {
+		err := GenClipVideoRequestValidationError{
+			field:  "Scenes",
+			reason: "value must contain at least 1 item(s)",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return GenClipVideoRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GenClipVideoRequestMultiError is an error wrapping multiple validation
+// errors returned by GenClipVideoRequest.ValidateAll() if the designated
+// constraints aren't met.
+type GenClipVideoRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GenClipVideoRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GenClipVideoRequestMultiError) AllErrors() []error { return m }
+
+// GenClipVideoRequestValidationError is the validation error returned by
+// GenClipVideoRequest.Validate if the designated constraints aren't met.
+type GenClipVideoRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GenClipVideoRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GenClipVideoRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GenClipVideoRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GenClipVideoRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GenClipVideoRequestValidationError) ErrorName() string {
+	return "GenClipVideoRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GenClipVideoRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGenClipVideoRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GenClipVideoRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GenClipVideoRequestValidationError{}
+
+// Validate checks the field values on GenClipVideoReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *GenClipVideoReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GenClipVideoReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GenClipVideoReplyMultiError, or nil if none found.
+func (m *GenClipVideoReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GenClipVideoReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return GenClipVideoReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// GenClipVideoReplyMultiError is an error wrapping multiple validation errors
+// returned by GenClipVideoReply.ValidateAll() if the designated constraints
+// aren't met.
+type GenClipVideoReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GenClipVideoReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GenClipVideoReplyMultiError) AllErrors() []error { return m }
+
+// GenClipVideoReplyValidationError is the validation error returned by
+// GenClipVideoReply.Validate if the designated constraints aren't met.
+type GenClipVideoReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GenClipVideoReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GenClipVideoReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GenClipVideoReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GenClipVideoReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GenClipVideoReplyValidationError) ErrorName() string {
+	return "GenClipVideoReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GenClipVideoReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGenClipVideoReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GenClipVideoReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GenClipVideoReplyValidationError{}

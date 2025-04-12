@@ -33,6 +33,20 @@ service Filmclip {
     };
   }
 
+  rpc GenClipFirstFrame (GenClipFrameRequest) returns (GenClipFrameReply) {
+    option (google.api.http) = {
+      post: "/clip/frame/generate",
+      body: "*",
+    };
+  }
+
+  rpc GenClipVideo (GenClipVideoRequest) returns (GenClipVideoReply) {
+    option (google.api.http) = {
+      post: "/clip/video/generate",
+      body: "*",
+    };
+  }
+
 }
 
 message CreatePlanRequest {
@@ -75,7 +89,25 @@ message GenClipScriptReply {
 message SceneScript {
   string description = 1;
   string actions = 2;
-  string shotType = 3;
+  string shot_type = 3;
+}
+
+message GenClipFrameRequest {
+  string plan_id = 1 [(validate.rules).string.min_len = 1];
+  repeated string scenes = 2 [(validate.rules).repeated.min_items = 1];
+}
+
+message GenClipFrameReply {
+  repeated string image_url = 1;
+}
+
+message GenClipVideoRequest {
+  string plan_id = 1 [(validate.rules).string.min_len = 1];
+  repeated string scenes = 2 [(validate.rules).repeated.min_items = 1];
+}
+
+message GenClipVideoReply {
+  repeated string video_url = 1;
 }
 
 enum Intent {

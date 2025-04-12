@@ -19,9 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Filmclip_CreatePlan_FullMethodName    = "/filmclip.v1.Filmclip/CreatePlan"
-	Filmclip_UploadImage_FullMethodName   = "/filmclip.v1.Filmclip/UploadImage"
-	Filmclip_GenClipScript_FullMethodName = "/filmclip.v1.Filmclip/GenClipScript"
+	Filmclip_CreatePlan_FullMethodName        = "/filmclip.v1.Filmclip/CreatePlan"
+	Filmclip_UploadImage_FullMethodName       = "/filmclip.v1.Filmclip/UploadImage"
+	Filmclip_GenClipScript_FullMethodName     = "/filmclip.v1.Filmclip/GenClipScript"
+	Filmclip_GenClipFirstFrame_FullMethodName = "/filmclip.v1.Filmclip/GenClipFirstFrame"
+	Filmclip_GenClipVideo_FullMethodName      = "/filmclip.v1.Filmclip/GenClipVideo"
 )
 
 // FilmclipClient is the client API for Filmclip service.
@@ -31,6 +33,8 @@ type FilmclipClient interface {
 	CreatePlan(ctx context.Context, in *CreatePlanRequest, opts ...grpc.CallOption) (*CreatePlanReply, error)
 	UploadImage(ctx context.Context, in *UploadImageRequest, opts ...grpc.CallOption) (*UploadImageReply, error)
 	GenClipScript(ctx context.Context, in *GenClipScriptRequest, opts ...grpc.CallOption) (*GenClipScriptReply, error)
+	GenClipFirstFrame(ctx context.Context, in *GenClipFrameRequest, opts ...grpc.CallOption) (*GenClipFrameReply, error)
+	GenClipVideo(ctx context.Context, in *GenClipVideoRequest, opts ...grpc.CallOption) (*GenClipVideoReply, error)
 }
 
 type filmclipClient struct {
@@ -71,6 +75,26 @@ func (c *filmclipClient) GenClipScript(ctx context.Context, in *GenClipScriptReq
 	return out, nil
 }
 
+func (c *filmclipClient) GenClipFirstFrame(ctx context.Context, in *GenClipFrameRequest, opts ...grpc.CallOption) (*GenClipFrameReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GenClipFrameReply)
+	err := c.cc.Invoke(ctx, Filmclip_GenClipFirstFrame_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *filmclipClient) GenClipVideo(ctx context.Context, in *GenClipVideoRequest, opts ...grpc.CallOption) (*GenClipVideoReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GenClipVideoReply)
+	err := c.cc.Invoke(ctx, Filmclip_GenClipVideo_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FilmclipServer is the server API for Filmclip service.
 // All implementations must embed UnimplementedFilmclipServer
 // for forward compatibility.
@@ -78,6 +102,8 @@ type FilmclipServer interface {
 	CreatePlan(context.Context, *CreatePlanRequest) (*CreatePlanReply, error)
 	UploadImage(context.Context, *UploadImageRequest) (*UploadImageReply, error)
 	GenClipScript(context.Context, *GenClipScriptRequest) (*GenClipScriptReply, error)
+	GenClipFirstFrame(context.Context, *GenClipFrameRequest) (*GenClipFrameReply, error)
+	GenClipVideo(context.Context, *GenClipVideoRequest) (*GenClipVideoReply, error)
 	mustEmbedUnimplementedFilmclipServer()
 }
 
@@ -96,6 +122,12 @@ func (UnimplementedFilmclipServer) UploadImage(context.Context, *UploadImageRequ
 }
 func (UnimplementedFilmclipServer) GenClipScript(context.Context, *GenClipScriptRequest) (*GenClipScriptReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GenClipScript not implemented")
+}
+func (UnimplementedFilmclipServer) GenClipFirstFrame(context.Context, *GenClipFrameRequest) (*GenClipFrameReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GenClipFirstFrame not implemented")
+}
+func (UnimplementedFilmclipServer) GenClipVideo(context.Context, *GenClipVideoRequest) (*GenClipVideoReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GenClipVideo not implemented")
 }
 func (UnimplementedFilmclipServer) mustEmbedUnimplementedFilmclipServer() {}
 func (UnimplementedFilmclipServer) testEmbeddedByValue()                  {}
@@ -172,6 +204,42 @@ func _Filmclip_GenClipScript_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Filmclip_GenClipFirstFrame_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GenClipFrameRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FilmclipServer).GenClipFirstFrame(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Filmclip_GenClipFirstFrame_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FilmclipServer).GenClipFirstFrame(ctx, req.(*GenClipFrameRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Filmclip_GenClipVideo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GenClipVideoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FilmclipServer).GenClipVideo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Filmclip_GenClipVideo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FilmclipServer).GenClipVideo(ctx, req.(*GenClipVideoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Filmclip_ServiceDesc is the grpc.ServiceDesc for Filmclip service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,6 +258,14 @@ var Filmclip_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GenClipScript",
 			Handler:    _Filmclip_GenClipScript_Handler,
+		},
+		{
+			MethodName: "GenClipFirstFrame",
+			Handler:    _Filmclip_GenClipFirstFrame_Handler,
+		},
+		{
+			MethodName: "GenClipVideo",
+			Handler:    _Filmclip_GenClipVideo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
