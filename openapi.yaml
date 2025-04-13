@@ -6,6 +6,24 @@ info:
     title: Filmclip API
     version: 0.0.1
 paths:
+    /asset/image/change_clothing:
+        post:
+            tags:
+                - Filmclip
+            operationId: Filmclip_ChangeClothing
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/filmclip.v1.ChangeClothingRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/filmclip.v1.ChangeClothingReply'
     /asset/image/upload:
         post:
             tags:
@@ -96,8 +114,60 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/filmclip.v1.CreatePlanReply'
+    /project/plan/list:
+        post:
+            tags:
+                - Filmclip
+            operationId: Filmclip_ListPlan
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/filmclip.v1.ListPlanRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/filmclip.v1.ListPlanReply'
+    /project/plan/query:
+        post:
+            tags:
+                - Filmclip
+            operationId: Filmclip_QueryPlan
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/filmclip.v1.QueryPlanRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/filmclip.v1.QueryPlanReply'
 components:
     schemas:
+        filmclip.v1.ChangeClothingReply:
+            type: object
+            properties:
+                imageUrl:
+                    type: array
+                    items:
+                        type: string
+        filmclip.v1.ChangeClothingRequest:
+            type: object
+            properties:
+                planId:
+                    type: string
+                clothImage:
+                    type: string
+                humanImage:
+                    type: string
         filmclip.v1.CreatePlanReply:
             type: object
             properties:
@@ -127,10 +197,6 @@ components:
         filmclip.v1.GenClipScriptReply:
             type: object
             properties:
-                title:
-                    type: string
-                content:
-                    type: string
                 scenes:
                     type: array
                     items:
@@ -140,9 +206,7 @@ components:
             properties:
                 planId:
                     type: string
-                clothImage:
-                    type: string
-                humanImage:
+                actorImage:
                     type: string
                 prompt:
                     type: string
@@ -162,9 +226,71 @@ components:
                     type: array
                     items:
                         type: string
+        filmclip.v1.ListPlanReply:
+            type: object
+            properties:
+                plans:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/filmclip.v1.PlanInfo'
+        filmclip.v1.ListPlanRequest:
+            type: object
+            properties:
+                userId:
+                    type: string
+        filmclip.v1.PlanDetail:
+            type: object
+            properties:
+                planId:
+                    type: string
+                name:
+                    type: string
+                step:
+                    type: integer
+                    format: int32
+                images:
+                    type: object
+                    additionalProperties:
+                        type: string
+                prompt:
+                    type: string
+                scenes:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/filmclip.v1.SceneScript'
+                clipFrames:
+                    type: object
+                    additionalProperties:
+                        type: string
+                clipVideos:
+                    type: object
+                    additionalProperties:
+                        type: string
+        filmclip.v1.PlanInfo:
+            type: object
+            properties:
+                planId:
+                    type: string
+                name:
+                    type: string
+                step:
+                    type: integer
+                    format: int32
+        filmclip.v1.QueryPlanReply:
+            type: object
+            properties:
+                plan:
+                    $ref: '#/components/schemas/filmclip.v1.PlanDetail'
+        filmclip.v1.QueryPlanRequest:
+            type: object
+            properties:
+                planId:
+                    type: string
         filmclip.v1.SceneScript:
             type: object
             properties:
+                sequence:
+                    type: string
                 description:
                     type: string
                 actions:

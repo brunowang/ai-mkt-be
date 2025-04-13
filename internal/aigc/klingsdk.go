@@ -15,6 +15,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -48,6 +49,7 @@ func NewKlingSDK(logger log.Logger, s3mgr *gfs3.S3Mgr) *KlingSDK {
 func (s *KlingSDK) InvokeVideoGeneration(ctx context.Context, params InvokeVideoGenerationParams) (res InvokeVideoGenerationResult, traceID string, err error) {
 	nowt := time.Now().UTC()
 	defer func() {
+		res.TaskID = "multi-" + res.TaskID
 		var taskID = string(res.TaskID)
 		s.lg.WithContext(ctx).Infof("KlingSDK.InvokeVideoGeneration costTime: %v, taskID: %s, thirdTaskID: %s, prompt: %s",
 			time.Since(nowt), params.TaskID, taskID, params.Prompt)
@@ -75,6 +77,7 @@ func (s *KlingSDK) InvokeVideoGeneration(ctx context.Context, params InvokeVideo
 		payload["aspect_ratio"] = params.AspectRatio
 	}
 	if len(params.EffectImageList) > 0 {
+		url = fmt.Sprintf("%s/%s", s.endpoint, "v1/videos/multi-image2video")
 		delete(payload, "image")
 		payload["image_list"] = append([]string{params.FirstFrameImage}, params.EffectImageList...)
 	}
@@ -119,6 +122,10 @@ func (s *KlingSDK) QueryVideoGeneration(ctx context.Context, taskID string) (res
 	}()
 
 	url := fmt.Sprintf("%s/%s/%s", s.endpoint, "v1/videos/image2video", taskID)
+	if strings.HasPrefix(taskID, "multi-") {
+		taskID = strings.TrimPrefix(taskID, "multi-")
+		url = fmt.Sprintf("%s/%s/%s", s.endpoint, "v1/videos/multi-image2video", taskID)
+	}
 	var result fetchKlingResult
 	token, err := s.encodeJWTToken(s.apiKey, s.apiSecret)
 	if err != nil {

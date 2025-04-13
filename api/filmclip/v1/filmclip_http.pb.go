@@ -19,24 +19,33 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
+const OperationFilmclipChangeClothing = "/filmclip.v1.Filmclip/ChangeClothing"
 const OperationFilmclipCreatePlan = "/filmclip.v1.Filmclip/CreatePlan"
 const OperationFilmclipGenClipFirstFrame = "/filmclip.v1.Filmclip/GenClipFirstFrame"
 const OperationFilmclipGenClipScript = "/filmclip.v1.Filmclip/GenClipScript"
 const OperationFilmclipGenClipVideo = "/filmclip.v1.Filmclip/GenClipVideo"
+const OperationFilmclipListPlan = "/filmclip.v1.Filmclip/ListPlan"
+const OperationFilmclipQueryPlan = "/filmclip.v1.Filmclip/QueryPlan"
 const OperationFilmclipUploadImage = "/filmclip.v1.Filmclip/UploadImage"
 
 type FilmclipHTTPServer interface {
+	ChangeClothing(context.Context, *ChangeClothingRequest) (*ChangeClothingReply, error)
 	CreatePlan(context.Context, *CreatePlanRequest) (*CreatePlanReply, error)
 	GenClipFirstFrame(context.Context, *GenClipFrameRequest) (*GenClipFrameReply, error)
 	GenClipScript(context.Context, *GenClipScriptRequest) (*GenClipScriptReply, error)
 	GenClipVideo(context.Context, *GenClipVideoRequest) (*GenClipVideoReply, error)
+	ListPlan(context.Context, *ListPlanRequest) (*ListPlanReply, error)
+	QueryPlan(context.Context, *QueryPlanRequest) (*QueryPlanReply, error)
 	UploadImage(context.Context, *UploadImageRequest) (*UploadImageReply, error)
 }
 
 func RegisterFilmclipHTTPServer(s *http.Server, srv FilmclipHTTPServer) {
 	r := s.Route("/")
 	r.POST("/project/plan/create", _Filmclip_CreatePlan0_HTTP_Handler(srv))
+	r.POST("/project/plan/list", _Filmclip_ListPlan0_HTTP_Handler(srv))
+	r.POST("/project/plan/query", _Filmclip_QueryPlan0_HTTP_Handler(srv))
 	r.POST("/asset/image/upload", _Filmclip_UploadImage0_HTTP_Handler(srv))
+	r.POST("/asset/image/change_clothing", _Filmclip_ChangeClothing0_HTTP_Handler(srv))
 	r.POST("/clip/script/generate", _Filmclip_GenClipScript0_HTTP_Handler(srv))
 	r.POST("/clip/frame/generate", _Filmclip_GenClipFirstFrame0_HTTP_Handler(srv))
 	r.POST("/clip/video/generate", _Filmclip_GenClipVideo0_HTTP_Handler(srv))
@@ -64,6 +73,50 @@ func _Filmclip_CreatePlan0_HTTP_Handler(srv FilmclipHTTPServer) func(ctx http.Co
 	}
 }
 
+func _Filmclip_ListPlan0_HTTP_Handler(srv FilmclipHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListPlanRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationFilmclipListPlan)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListPlan(ctx, req.(*ListPlanRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListPlanReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Filmclip_QueryPlan0_HTTP_Handler(srv FilmclipHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in QueryPlanRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationFilmclipQueryPlan)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.QueryPlan(ctx, req.(*QueryPlanRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*QueryPlanReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _Filmclip_UploadImage0_HTTP_Handler(srv FilmclipHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UploadImageRequest
@@ -82,6 +135,28 @@ func _Filmclip_UploadImage0_HTTP_Handler(srv FilmclipHTTPServer) func(ctx http.C
 			return err
 		}
 		reply := out.(*UploadImageReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Filmclip_ChangeClothing0_HTTP_Handler(srv FilmclipHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ChangeClothingRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationFilmclipChangeClothing)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ChangeClothing(ctx, req.(*ChangeClothingRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ChangeClothingReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -153,10 +228,13 @@ func _Filmclip_GenClipVideo0_HTTP_Handler(srv FilmclipHTTPServer) func(ctx http.
 }
 
 type FilmclipHTTPClient interface {
+	ChangeClothing(ctx context.Context, req *ChangeClothingRequest, opts ...http.CallOption) (rsp *ChangeClothingReply, err error)
 	CreatePlan(ctx context.Context, req *CreatePlanRequest, opts ...http.CallOption) (rsp *CreatePlanReply, err error)
 	GenClipFirstFrame(ctx context.Context, req *GenClipFrameRequest, opts ...http.CallOption) (rsp *GenClipFrameReply, err error)
 	GenClipScript(ctx context.Context, req *GenClipScriptRequest, opts ...http.CallOption) (rsp *GenClipScriptReply, err error)
 	GenClipVideo(ctx context.Context, req *GenClipVideoRequest, opts ...http.CallOption) (rsp *GenClipVideoReply, err error)
+	ListPlan(ctx context.Context, req *ListPlanRequest, opts ...http.CallOption) (rsp *ListPlanReply, err error)
+	QueryPlan(ctx context.Context, req *QueryPlanRequest, opts ...http.CallOption) (rsp *QueryPlanReply, err error)
 	UploadImage(ctx context.Context, req *UploadImageRequest, opts ...http.CallOption) (rsp *UploadImageReply, err error)
 }
 
@@ -166,6 +244,19 @@ type FilmclipHTTPClientImpl struct {
 
 func NewFilmclipHTTPClient(client *http.Client) FilmclipHTTPClient {
 	return &FilmclipHTTPClientImpl{client}
+}
+
+func (c *FilmclipHTTPClientImpl) ChangeClothing(ctx context.Context, in *ChangeClothingRequest, opts ...http.CallOption) (*ChangeClothingReply, error) {
+	var out ChangeClothingReply
+	pattern := "/asset/image/change_clothing"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationFilmclipChangeClothing))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
 }
 
 func (c *FilmclipHTTPClientImpl) CreatePlan(ctx context.Context, in *CreatePlanRequest, opts ...http.CallOption) (*CreatePlanReply, error) {
@@ -212,6 +303,32 @@ func (c *FilmclipHTTPClientImpl) GenClipVideo(ctx context.Context, in *GenClipVi
 	pattern := "/clip/video/generate"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationFilmclipGenClipVideo))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *FilmclipHTTPClientImpl) ListPlan(ctx context.Context, in *ListPlanRequest, opts ...http.CallOption) (*ListPlanReply, error) {
+	var out ListPlanReply
+	pattern := "/project/plan/list"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationFilmclipListPlan))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *FilmclipHTTPClientImpl) QueryPlan(ctx context.Context, in *QueryPlanRequest, opts ...http.CallOption) (*QueryPlanReply, error) {
+	var out QueryPlanReply
+	pattern := "/project/plan/query"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationFilmclipQueryPlan))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {

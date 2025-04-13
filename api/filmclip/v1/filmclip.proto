@@ -19,9 +19,30 @@ service Filmclip {
     };
   }
 
+  rpc ListPlan (ListPlanRequest) returns (ListPlanReply) {
+    option (google.api.http) = {
+      post: "/project/plan/list",
+      body: "*",
+    };
+  }
+
+  rpc QueryPlan (QueryPlanRequest) returns (QueryPlanReply) {
+    option (google.api.http) = {
+      post: "/project/plan/query",
+      body: "*",
+    };
+  }
+
   rpc UploadImage (UploadImageRequest) returns (UploadImageReply) {
     option (google.api.http) = {
       post: "/asset/image/upload",
+      body: "*",
+    };
+  }
+
+  rpc ChangeClothing (ChangeClothingRequest) returns (ChangeClothingReply) {
+    option (google.api.http) = {
+      post: "/asset/image/change_clothing",
       body: "*",
     };
   }
@@ -57,6 +78,39 @@ message CreatePlanReply {
   string plan_id = 1;
 }
 
+message ListPlanRequest {
+  string user_id = 1 [(validate.rules).string.min_len = 1];
+}
+
+message ListPlanReply {
+  repeated PlanInfo plans = 1;
+}
+
+message QueryPlanRequest {
+  string plan_id = 1 [(validate.rules).string.min_len = 1];
+}
+
+message QueryPlanReply {
+  PlanDetail plan = 1;
+}
+
+message PlanInfo {
+  string plan_id = 1;
+  string name = 2;
+  int32 step = 3;
+}
+
+message PlanDetail {
+  string plan_id = 1;
+  string name = 2;
+  int32 step = 3;
+  map<string, string> images = 4;
+  string prompt = 5;
+  repeated SceneScript scenes = 6;
+  map<string, string> clip_frames = 7;
+  map<string, string> clip_videos = 8;
+}
+
 message UploadImageRequest {
   enum ImageType {
     Unknown = 0;
@@ -73,23 +127,31 @@ message UploadImageReply {
   string url = 1;
 }
 
-message GenClipScriptRequest {
+message ChangeClothingRequest {
   string plan_id = 1 [(validate.rules).string.min_len = 1];
   string cloth_image = 2 [(validate.rules).string.min_len = 1];
   string human_image = 3 [(validate.rules).string.min_len = 1];
-  string prompt = 4;
+}
+
+message ChangeClothingReply {
+  repeated string image_url = 1;
+}
+
+message GenClipScriptRequest {
+  string plan_id = 1 [(validate.rules).string.min_len = 1];
+  string actor_image = 2 [(validate.rules).string.min_len = 1];
+  string prompt = 3;
 }
 
 message GenClipScriptReply {
-  string title = 1;
-  string content = 2;
-  repeated SceneScript scenes = 3;
+  repeated SceneScript scenes = 1;
 }
 
 message SceneScript {
-  string description = 1;
-  string actions = 2;
-  string shot_type = 3;
+  string sequence = 1;
+  string description = 2;
+  string actions = 3;
+  string shot_type = 4;
 }
 
 message GenClipFrameRequest {

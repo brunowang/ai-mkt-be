@@ -3,7 +3,6 @@ package service
 import (
 	v1 "ai-mkt-be/api/filmclip/v1"
 	"ai-mkt-be/internal/agents/llm"
-	"ai-mkt-be/internal/aigc"
 	"ai-mkt-be/internal/biz"
 	"ai-mkt-be/internal/lib"
 	"bytes"
@@ -14,6 +13,7 @@ import (
 	"github.com/brunowang/gframe/gfs3"
 	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/spf13/cast"
 	"os"
 )
 
@@ -24,18 +24,18 @@ type FilmclipService struct {
 	s3mgr *gfs3.S3Mgr
 
 	agentGraph *biz.AgentGraph
-	klingSDK   *aigc.KlingSDK
+	videoGen   *biz.VideoGen
 	planUC     *biz.PlanUsecase
 }
 
 // NewFilmclipService new a filmclip service.
 func NewFilmclipService(logger log.Logger, s3mgr *gfs3.S3Mgr, agentGraph *biz.AgentGraph,
-	klingSDK *aigc.KlingSDK, planUC *biz.PlanUsecase) *FilmclipService {
+	videoGen *biz.VideoGen, planUC *biz.PlanUsecase) *FilmclipService {
 	return &FilmclipService{
 		lg:         log.NewHelper(logger),
 		s3mgr:      s3mgr,
 		agentGraph: agentGraph,
-		klingSDK:   klingSDK,
+		videoGen:   videoGen,
 		planUC:     planUC,
 	}
 }
@@ -99,9 +99,8 @@ func (s *FilmclipService) GenClipScript(ctx context.Context, req *v1.GenClipScri
 		{
 			Role: llm.RoleUser,
 			Content: llm.MultiContent{
-				llm.NewTextContent("参考这两张图片，第一张是服装图，第二张是模特图。\n" + req.Prompt),
-				llm.NewImageContent(req.ClothImage),
-				llm.NewImageContent(req.HumanImage),
+				llm.NewTextContent("参考这张角色图片。主要关注人物形象和服装穿搭\n" + req.Prompt),
+				llm.NewImageContent(req.ActorImage),
 			},
 		},
 	}
@@ -116,7 +115,15 @@ func (s *FilmclipService) GenClipScript(ctx context.Context, req *v1.GenClipScri
 	); err != nil {
 		return nil, errors.New(500, "UPDATE_PLAN_ERROR", err.Error())
 	}
-	js, err := llm.ExtractJSONFromText(ans.Content)
+	scenes, err := parseSceneScript(ans.Content)
+	if err != nil {
+		return nil, err
+	}
+	return &v1.GenClipScriptReply{Scenes: scenes}, nil
+}
+
+func parseSceneScript(content string) ([]*v1.SceneScript, error) {
+	js, err := llm.ExtractJSONFromText(content)
 	if err != nil {
 		return nil, err
 	}
@@ -127,10 +134,12 @@ func (s *FilmclipService) GenClipScript(ctx context.Context, req *v1.GenClipScri
 	scenes := make([]*v1.SceneScript, 0, len(arr))
 	for _, ele := range arr {
 		var scene v1.SceneScript
+		sequence, _ := ele["镜头编号"].(float64)
+		scene.Sequence = cast.ToString(sequence)
 		scene.Description, _ = ele["场景描述"].(string)
 		scene.Actions, _ = ele["拍摄动作"].(string)
 		scene.ShotType, _ = ele["镜头类型"].(string)
 		scenes = append(scenes, &scene)
 	}
-	return &v1.GenClipScriptReply{Scenes: scenes}, nil
+	return scenes, nil
 }

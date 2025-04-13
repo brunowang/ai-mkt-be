@@ -17,9 +17,11 @@ type Plan struct {
 	PlanName   string            `gorm:"column:plan_name" json:"plan_name"`
 	Images     map[string]string `gorm:"column:images;type:json;serializer:json" json:"images"`
 	Prompt     string            `gorm:"column:prompt" json:"prompt"`
-	ClipScript string            `gorm:"column:clip_script" json:"clip_script"`
-	Reason     string            `gorm:"column:reason;type:varchar(500)" json:"reason"`
 	Step       int               `gorm:"column:step;type:int" json:"step"`
+	ClipScript string            `gorm:"column:clip_script" json:"clip_script"`
+	ClipFrames map[string]string `gorm:"column:clip_frames;type:json;serializer:json" json:"clip_frames"`
+	ClipVideos map[string]string `gorm:"column:clip_videos;type:json;serializer:json" json:"clip_videos"`
+	Reason     string            `gorm:"column:reason;type:varchar(500)" json:"reason"`
 	ExtData    map[string]string `gorm:"column:ext_data;type:json;serializer:json" json:"ext_data"`
 	CreateTime sql.NullTime      `gorm:"column:create_time" json:"create_time"`
 	UpdateTime sql.NullTime      `gorm:"column:update_time" json:"update_time"`

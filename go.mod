@@ -13,6 +13,7 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.1.0
 	github.com/google/wire v0.6.0
 	github.com/pkg/errors v0.9.1
+	github.com/spf13/cast v1.6.0
 	go.opentelemetry.io/otel/sdk v1.24.0
 	go.uber.org/automaxprocs v1.5.1
 	google.golang.org/genproto/googleapis/api v0.0.0-20240528184218-531527333157

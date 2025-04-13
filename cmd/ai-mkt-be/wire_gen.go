@@ -29,13 +29,14 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 	s3Mgr := lib.NewS3Mgr()
 	agentGraph := biz.NewAgentGraph(logger)
 	klingSDK := aigc.NewKlingSDK(logger, s3Mgr)
+	videoGen := biz.NewVideoGen(klingSDK)
 	dataData, cleanup, err := data.NewData(confData, logger)
 	if err != nil {
 		return nil, nil, err
 	}
 	planRepo := data.NewPlanRepo(dataData, logger)
 	planUsecase := biz.NewPlanUsecase(planRepo, logger)
-	filmclipService := service.NewFilmclipService(logger, s3Mgr, agentGraph, klingSDK, planUsecase)
+	filmclipService := service.NewFilmclipService(logger, s3Mgr, agentGraph, videoGen, planUsecase)
 	grpcServer := server.NewGRPCServer(confServer, filmclipService, logger)
 	httpServer := server.NewHTTPServer(confServer, filmclipService, logger)
 	app := newApp(logger, grpcServer, httpServer)

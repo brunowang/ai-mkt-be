@@ -20,7 +20,10 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	Filmclip_CreatePlan_FullMethodName        = "/filmclip.v1.Filmclip/CreatePlan"
+	Filmclip_ListPlan_FullMethodName          = "/filmclip.v1.Filmclip/ListPlan"
+	Filmclip_QueryPlan_FullMethodName         = "/filmclip.v1.Filmclip/QueryPlan"
 	Filmclip_UploadImage_FullMethodName       = "/filmclip.v1.Filmclip/UploadImage"
+	Filmclip_ChangeClothing_FullMethodName    = "/filmclip.v1.Filmclip/ChangeClothing"
 	Filmclip_GenClipScript_FullMethodName     = "/filmclip.v1.Filmclip/GenClipScript"
 	Filmclip_GenClipFirstFrame_FullMethodName = "/filmclip.v1.Filmclip/GenClipFirstFrame"
 	Filmclip_GenClipVideo_FullMethodName      = "/filmclip.v1.Filmclip/GenClipVideo"
@@ -31,7 +34,10 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FilmclipClient interface {
 	CreatePlan(ctx context.Context, in *CreatePlanRequest, opts ...grpc.CallOption) (*CreatePlanReply, error)
+	ListPlan(ctx context.Context, in *ListPlanRequest, opts ...grpc.CallOption) (*ListPlanReply, error)
+	QueryPlan(ctx context.Context, in *QueryPlanRequest, opts ...grpc.CallOption) (*QueryPlanReply, error)
 	UploadImage(ctx context.Context, in *UploadImageRequest, opts ...grpc.CallOption) (*UploadImageReply, error)
+	ChangeClothing(ctx context.Context, in *ChangeClothingRequest, opts ...grpc.CallOption) (*ChangeClothingReply, error)
 	GenClipScript(ctx context.Context, in *GenClipScriptRequest, opts ...grpc.CallOption) (*GenClipScriptReply, error)
 	GenClipFirstFrame(ctx context.Context, in *GenClipFrameRequest, opts ...grpc.CallOption) (*GenClipFrameReply, error)
 	GenClipVideo(ctx context.Context, in *GenClipVideoRequest, opts ...grpc.CallOption) (*GenClipVideoReply, error)
@@ -55,10 +61,40 @@ func (c *filmclipClient) CreatePlan(ctx context.Context, in *CreatePlanRequest, 
 	return out, nil
 }
 
+func (c *filmclipClient) ListPlan(ctx context.Context, in *ListPlanRequest, opts ...grpc.CallOption) (*ListPlanReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListPlanReply)
+	err := c.cc.Invoke(ctx, Filmclip_ListPlan_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *filmclipClient) QueryPlan(ctx context.Context, in *QueryPlanRequest, opts ...grpc.CallOption) (*QueryPlanReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryPlanReply)
+	err := c.cc.Invoke(ctx, Filmclip_QueryPlan_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *filmclipClient) UploadImage(ctx context.Context, in *UploadImageRequest, opts ...grpc.CallOption) (*UploadImageReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UploadImageReply)
 	err := c.cc.Invoke(ctx, Filmclip_UploadImage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *filmclipClient) ChangeClothing(ctx context.Context, in *ChangeClothingRequest, opts ...grpc.CallOption) (*ChangeClothingReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ChangeClothingReply)
+	err := c.cc.Invoke(ctx, Filmclip_ChangeClothing_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -100,7 +136,10 @@ func (c *filmclipClient) GenClipVideo(ctx context.Context, in *GenClipVideoReque
 // for forward compatibility.
 type FilmclipServer interface {
 	CreatePlan(context.Context, *CreatePlanRequest) (*CreatePlanReply, error)
+	ListPlan(context.Context, *ListPlanRequest) (*ListPlanReply, error)
+	QueryPlan(context.Context, *QueryPlanRequest) (*QueryPlanReply, error)
 	UploadImage(context.Context, *UploadImageRequest) (*UploadImageReply, error)
+	ChangeClothing(context.Context, *ChangeClothingRequest) (*ChangeClothingReply, error)
 	GenClipScript(context.Context, *GenClipScriptRequest) (*GenClipScriptReply, error)
 	GenClipFirstFrame(context.Context, *GenClipFrameRequest) (*GenClipFrameReply, error)
 	GenClipVideo(context.Context, *GenClipVideoRequest) (*GenClipVideoReply, error)
@@ -117,8 +156,17 @@ type UnimplementedFilmclipServer struct{}
 func (UnimplementedFilmclipServer) CreatePlan(context.Context, *CreatePlanRequest) (*CreatePlanReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreatePlan not implemented")
 }
+func (UnimplementedFilmclipServer) ListPlan(context.Context, *ListPlanRequest) (*ListPlanReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListPlan not implemented")
+}
+func (UnimplementedFilmclipServer) QueryPlan(context.Context, *QueryPlanRequest) (*QueryPlanReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryPlan not implemented")
+}
 func (UnimplementedFilmclipServer) UploadImage(context.Context, *UploadImageRequest) (*UploadImageReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UploadImage not implemented")
+}
+func (UnimplementedFilmclipServer) ChangeClothing(context.Context, *ChangeClothingRequest) (*ChangeClothingReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ChangeClothing not implemented")
 }
 func (UnimplementedFilmclipServer) GenClipScript(context.Context, *GenClipScriptRequest) (*GenClipScriptReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GenClipScript not implemented")
@@ -168,6 +216,42 @@ func _Filmclip_CreatePlan_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Filmclip_ListPlan_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPlanRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FilmclipServer).ListPlan(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Filmclip_ListPlan_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FilmclipServer).ListPlan(ctx, req.(*ListPlanRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Filmclip_QueryPlan_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryPlanRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FilmclipServer).QueryPlan(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Filmclip_QueryPlan_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FilmclipServer).QueryPlan(ctx, req.(*QueryPlanRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Filmclip_UploadImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UploadImageRequest)
 	if err := dec(in); err != nil {
@@ -182,6 +266,24 @@ func _Filmclip_UploadImage_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(FilmclipServer).UploadImage(ctx, req.(*UploadImageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Filmclip_ChangeClothing_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChangeClothingRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FilmclipServer).ChangeClothing(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Filmclip_ChangeClothing_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FilmclipServer).ChangeClothing(ctx, req.(*ChangeClothingRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -252,8 +354,20 @@ var Filmclip_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Filmclip_CreatePlan_Handler,
 		},
 		{
+			MethodName: "ListPlan",
+			Handler:    _Filmclip_ListPlan_Handler,
+		},
+		{
+			MethodName: "QueryPlan",
+			Handler:    _Filmclip_QueryPlan_Handler,
+		},
+		{
 			MethodName: "UploadImage",
 			Handler:    _Filmclip_UploadImage_Handler,
+		},
+		{
+			MethodName: "ChangeClothing",
+			Handler:    _Filmclip_ChangeClothing_Handler,
 		},
 		{
 			MethodName: "GenClipScript",
