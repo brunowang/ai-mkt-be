@@ -7,9 +7,11 @@
 package main
 
 import (
+	"ai-mkt-be/internal/aigc"
 	"ai-mkt-be/internal/biz"
 	"ai-mkt-be/internal/conf"
 	"ai-mkt-be/internal/data"
+	"ai-mkt-be/internal/lib"
 	"ai-mkt-be/internal/server"
 	"ai-mkt-be/internal/service"
 	"github.com/go-kratos/kratos/v2"
@@ -24,14 +26,16 @@ import (
 
 // wireApp init kratos application.
 func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
+	s3Mgr := lib.NewS3Mgr()
 	agentGraph := biz.NewAgentGraph(logger)
+	klingSDK := aigc.NewKlingSDK(logger, s3Mgr)
 	dataData, cleanup, err := data.NewData(confData, logger)
 	if err != nil {
 		return nil, nil, err
 	}
 	planRepo := data.NewPlanRepo(dataData, logger)
 	planUsecase := biz.NewPlanUsecase(planRepo, logger)
-	filmclipService := service.NewFilmclipService(logger, agentGraph, planUsecase)
+	filmclipService := service.NewFilmclipService(logger, s3Mgr, agentGraph, klingSDK, planUsecase)
 	grpcServer := server.NewGRPCServer(confServer, filmclipService, logger)
 	httpServer := server.NewHTTPServer(confServer, filmclipService, logger)
 	app := newApp(logger, grpcServer, httpServer)

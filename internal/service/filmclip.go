@@ -3,6 +3,7 @@ package service
 import (
 	v1 "ai-mkt-be/api/filmclip/v1"
 	"ai-mkt-be/internal/agents/llm"
+	"ai-mkt-be/internal/aigc"
 	"ai-mkt-be/internal/biz"
 	"ai-mkt-be/internal/lib"
 	"bytes"
@@ -23,21 +24,18 @@ type FilmclipService struct {
 	s3mgr *gfs3.S3Mgr
 
 	agentGraph *biz.AgentGraph
+	klingSDK   *aigc.KlingSDK
 	planUC     *biz.PlanUsecase
 }
 
 // NewFilmclipService new a filmclip service.
-func NewFilmclipService(logger log.Logger, agentGraph *biz.AgentGraph, planUC *biz.PlanUsecase) *FilmclipService {
-	s3mgr := gfs3.NewS3Mgr(gfs3.AwsS3Config{
-		AccessKey: os.Getenv("S3_AK"),
-		SecretKey: os.Getenv("S3_SK"),
-		Region:    os.Getenv("S3_REGION"),
-	})
-
+func NewFilmclipService(logger log.Logger, s3mgr *gfs3.S3Mgr, agentGraph *biz.AgentGraph,
+	klingSDK *aigc.KlingSDK, planUC *biz.PlanUsecase) *FilmclipService {
 	return &FilmclipService{
 		lg:         log.NewHelper(logger),
 		s3mgr:      s3mgr,
 		agentGraph: agentGraph,
+		klingSDK:   klingSDK,
 		planUC:     planUC,
 	}
 }
