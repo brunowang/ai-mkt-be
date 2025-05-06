@@ -54,6 +54,22 @@ func (s *FilmclipService) CreatePlan(ctx context.Context, req *v1.CreatePlanRequ
 	}, nil
 }
 
+func (s *FilmclipService) ListPlan(ctx context.Context, req *v1.ListPlanRequest) (*v1.ListPlanReply, error) {
+	list, err := s.planUC.ListPlan(ctx, req.UserId)
+	if err != nil {
+		return nil, errors.New(500, "LIST_PLAN_ERROR", err.Error())
+	}
+	ret := new(v1.ListPlanReply)
+	for _, plan := range list {
+		ret.List = append(ret.List, &v1.PlanInfo{
+			PlanId: plan.PlanID,
+			Name:   plan.PlanName,
+			Step:   int32(plan.Step),
+		})
+	}
+	return ret, nil
+}
+
 func (s *FilmclipService) UploadImage(ctx context.Context, req *v1.UploadImageRequest) (*v1.UploadImageReply, error) {
 	data, err := base64.StdEncoding.DecodeString(req.Base64)
 	if err != nil {

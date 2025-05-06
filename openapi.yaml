@@ -229,7 +229,7 @@ components:
         filmclip.v1.ListPlanReply:
             type: object
             properties:
-                plans:
+                list:
                     type: array
                     items:
                         $ref: '#/components/schemas/filmclip.v1.PlanInfo'

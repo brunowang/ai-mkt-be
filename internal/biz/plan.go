@@ -80,3 +80,9 @@ func (uc *PlanUsecase) QueryPlan(ctx context.Context, planID string) (*Plan, err
 	uc.log.WithContext(ctx).Infof("QueryPlan: %v", planID)
 	return uc.repo.FindByID(ctx, planID)
 }
+
+// ListPlan list Plans by userID.
+func (uc *PlanUsecase) ListPlan(ctx context.Context, userID string) ([]*Plan, error) {
+	uc.log.WithContext(ctx).Infof("ListPlan: %v", userID)
+	return uc.repo.ListByUser(ctx, userID)
+}

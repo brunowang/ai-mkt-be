@@ -83,7 +83,7 @@ message ListPlanRequest {
 }
 
 message ListPlanReply {
-  repeated PlanInfo plans = 1;
+  repeated PlanInfo list = 1;
 }
 
 message QueryPlanRequest {
