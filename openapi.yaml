@@ -176,6 +176,8 @@ components:
         filmclip.v1.CreatePlanRequest:
             type: object
             properties:
+                userId:
+                    type: string
                 name:
                     type: string
         filmclip.v1.GenClipFrameReply:

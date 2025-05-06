@@ -57,6 +57,17 @@ func (m *CreatePlanRequest) validate(all bool) error {
 
 	var errors []error
 
+	if utf8.RuneCountInString(m.GetUserId()) < 1 {
+		err := CreatePlanRequestValidationError{
+			field:  "UserId",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	if utf8.RuneCountInString(m.GetName()) < 1 {
 		err := CreatePlanRequestValidationError{
 			field:  "Name",

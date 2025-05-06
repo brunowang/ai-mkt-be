@@ -43,6 +43,7 @@ func NewFilmclipService(logger log.Logger, s3mgr *gfs3.S3Mgr, agentGraph *biz.Ag
 func (s *FilmclipService) CreatePlan(ctx context.Context, req *v1.CreatePlanRequest) (*v1.CreatePlanReply, error) {
 	planID := lib.GenUniqueID()
 	if err := s.planUC.CreatePlan(ctx, &biz.Plan{
+		UserID:   req.UserId,
 		PlanID:   planID,
 		PlanName: req.Name,
 		Step:     1,
